@@ -1,47 +1,41 @@
 
-### 2. `main.py`
+from collections import defaultdict, deque
+def longest_path(graph:list) -> int:
+    n = len(graph)
+    
+    in_degree = [0] * n
+    for u in range(n):
+        for v, w in graph[u]:
+            in_degree[v] += 1
+    
+    topo_order = []
+    queue = deque([u for u in range(n) if in_degree[u] == 0])
+    
+    while queue:
+        u = queue.popleft()
+        topo_order.append(u)
+        for v, w in graph[u]:
+            in_degree[v] -= 1
+            if in_degree[v] == 0:
+                queue.append(v)
+    
+    dp = [float('-inf')] * n
+    dp[topo_order[0]] = 0 
+    
+    for u in topo_order:
+        if dp[u] != float('-inf'):
+            for v, w in graph[u]:
+                dp[v] = max(dp[v], dp[u] + w)
+    
+    longest_path_length = max(dp)
+    
+    return longest_path_length
 
-```python
-"""
-Assignment: Implement the most efficient algorithm to solve the given problem.
-
-Problem Statement:
-You are given a Directed Acyclic Graph (DAG) with `n` nodes, numbered from `0` to `n-1`.
-The graph is represented as an adjacency list where `graph[i]` is a list of tuples `(j, w)`,
-representing an edge from node `i` to node `j` with weight `w`. Your task is to find the longest
-path in the graph starting from any node.
-
-Function Signature:
-def longest_path(graph: list) -> int:
-
-Parameters:
-- graph (list): A list of lists, where `graph[i]` contains tuples `(j, w)` representing an edge
-  from node `i` to node `j` with weight `w`.
-
-Returns:
-- int: The length of the longest path in the graph.
-
-Example:
->>> graph = [
-...     [(1, 3), (2, 2)],
-...     [(3, 4)],
-...     [(3, 1)],
-...     []
-... ]
->>> longest_path(graph)
-7
-"""
-
-def longest_path(graph: list) -> int:
-    # Your implementation goes here
-    pass
-
-# Helper function to perform topological sort
-def topological_sort(graph):
-    # Your implementation goes here
-    pass
-
-# Function to calculate longest path using topological sort
-def calculate_longest_path(graph, topo_order):
-    # Your implementation goes here
-    pass
+graph =  [
+        [(1, 1), (2, 1)],
+        [(3, 1)],
+        [(3, 1)],
+        []
+    ]
+result = longest_path(graph)
+print( result)
